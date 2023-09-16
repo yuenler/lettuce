@@ -181,9 +181,7 @@ const recipes = [
 
 const RecipesPage = () => {
   return (
-    <div className="row" style={{
-      backgroundColor: '#e7f0e4', height: '100vh',
-    }}>
+    <div className="row" >
       {
         recipes.map((recipe, index) => (
           <div className="col-md-4" key={index}>
@@ -213,12 +211,11 @@ const RecipeCard = ({ name, description, imageUrl }) => {
             <h5 className="card-title">{name}</h5>
             <p className="card-text">{description}</p>
             <button
-              style={{ backgroundColor: '#526446' }}
               onClick={() => {
                 setShowRecipe(!showRecipe);
                 setRecipe(recipes.find((recipe) => recipe.name === name));
               }} variant="primary"
-              className='btn btn-primary'
+              className='btn btn-success'
             >
               View Recipe
             </button>
@@ -246,8 +243,8 @@ const RecipeCard = ({ name, description, imageUrl }) => {
             </div>
 
           </div>
-          <button onClick={() => setShowRecipe(!showRecipe)} variant="primary" style={{ backgroundColor: '#526446' }}
-            className='btn btn-primary'
+          <button onClick={() => setShowRecipe(!showRecipe)} variant="primary"
+            className='btn btn-success'
           >
             Done
           </button>

@@ -134,25 +134,30 @@ const ScanReceiptPage = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#e7f0e4' }}>
-      <div className="container pt-5" >
+    <div className='m-5'>
+      <div className=" pt-5" >
         <div className="row">
-          <div className="col-md-6 offset-md-3 text-center">
-            <p>{`Username: ${username}`}</p>
-            <label htmlFor="imageFile" className="form-label">
-              Upload a receipt
-            </label>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+          <div className="text-center">
+            <h1
+              style={{ color: 'green', fontWeight: 'bold' }}
+            >{`Hello ${username}!`}</h1>
+            <div style={{ border: '2px solid green', borderRadius: '10px', padding: 20 }}>
+              <h2>
+                <label htmlFor="imageFile" className="form-label">
+                  Upload your grocery receipt
+                </label>
+              </h2>
+              <input type="file" accept="image/*" onChange={handleImageChange} />
+
+            </div>
             <div>
               <button
-                className="btn btn-primary m-3"
+                className="btn btn-success m-3 "
                 onClick={handleScanReceipt}
-                style={{ backgroundColor: '#526446' }}
               >
                 Scan Receipt
               </button>
-              <Link to="/recipes" className="btn btn-primary btn-lg m-3"
-                style={{ backgroundColor: '#526446' }}
+              <Link to="/recipes" className="btn btn-success btn-lg m-3"
               >
                 Recipes
               </Link>
@@ -163,18 +168,18 @@ const ScanReceiptPage = () => {
               {loading ? (
                 <p>Loading...</p>
               ) : (
-                <div className="container">
+                <div >
                   <div className="row">
                     {receiptsList.map((receipt, index) => (
                       <div key={receipt.id} className="col-md-6">
                         <div className="card-container">
-                          <button
-                            style={{ backgroundColor: '#526446' }}
-                            className="btn btn-close"
-                            onClick={() => closeCard(receipt.id)}
-                          >
-                          </button>
+
                           <div className="card mb-3">
+                            <button
+                              className="btn btn-close m-2"
+                              onClick={() => closeCard(receipt.id)}
+                            >
+                            </button>
                             <div className="card-body">
                               <h5 className="card-title">{receipt.food}</h5>
                               <p className="card-text">
@@ -182,8 +187,8 @@ const ScanReceiptPage = () => {
                               </p>
                               {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
                               {!receipt.notified ?
-                                <button style={{ backgroundColor: '#526446' }}
-                                  className='btn btn-primary' onClick={() => notifyNetwork(
+                                <button
+                                  className='btn btn-success' onClick={() => notifyNetwork(
                                     receipt.id
                                   )}>
                                   Notify network
@@ -205,7 +210,7 @@ const ScanReceiptPage = () => {
             <div>
               <h4>Food available in your network</h4>
               <p>These people have food that will expire soon and would love to share it with you!</p>
-              <div className="container">
+              <div className="">
                 <div className="row">
                   {otherPeopleFood.map((receipt, index) => (
                     <div key={receipt.id} className="col-md-6">
@@ -230,7 +235,7 @@ const ScanReceiptPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
