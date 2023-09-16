@@ -5,18 +5,52 @@ import { getDocs, collection } from 'firebase/firestore'
 import { auth, firestore } from '../firebase';
 import generic_food from '../assets/generic-food.csv';
 import walmart from '../assets/walmart';
+import { Link, useLocation } from 'react-router-dom';
+import { getDocs, doc, setDoc, deleteDoc, collection } from 'firebase/firestore'
+import { firestore } from '../firebase';
+
+
+const foodLifespan = {
+  'zucchini': 5,
+  'potato': 10,
+}
+
 
 const ScanReceiptPage = () => {
-  const [user] = useAuthState(auth);
   const [imageFile, setImageFile] = useState(null);
   const [extractedText, setExtractedText] = useState('');
+  const location = useLocation();
+  const { username } = location.state;
+  const [loading, setLoading] = useState(false);
+  const [receiptsList, setReceiptsList] = useState([])
+  const [otherPeopleFood, setOtherPeopleFood] = useState([])
+
 
   useEffect(() => {
     const getReceipts = async () => {
       const receiptsRef = collection(firestore, 'receipts')
       const receiptsSnapshot = await getDocs(receiptsRef)
-      const receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
-      console.log(receiptsList)
+      let receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
+
+      // sort by expiration date
+      receiptsList.sort((a, b) => a.expiration.seconds - b.expiration.seconds)
+      // add a field to all of them called "expiresSoon" if expires in 7 days or less
+      receiptsList.forEach(receipt => {
+        receipt.expiresSoon = receipt.expiration.seconds * 1000 - Date.now() < 7 * 24 * 60 * 60 * 1000
+      })
+
+      //set id to be the doc id
+      receiptsList.forEach((receipt, index) => {
+        receipt.id = receiptsSnapshot.docs[index].id
+      })
+
+      // filter to those where username matches
+      receiptsList = receiptsList.filter(receipt => receipt.username === username)
+
+      const other = receiptsList.filter(receipt => receipt.username !== username && receipt.notified)
+      setOtherPeopleFood(other)
+
+      setReceiptsList(receiptsList)
     }
     getReceipts()
   }
@@ -130,17 +164,20 @@ async function readFile(file) {
   
 
 
-  const [receipts, loading, error] = [null, null, null];
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageFile(file);
   };
 
   const handleScanReceipt = async () => {
+
     if (!imageFile) {
       alert('Please select an image first.');
       return;
     }
+
+    setLoading(true);
+
 
     try {
       // const formData = new FormData();
@@ -155,49 +192,123 @@ async function readFile(file) {
       // const extractedText =
       //   response?.data?.responses[0]?.fullTextAnnotation?.text || '';
 
-      setExtractedText(await extractFoodItems(text));
+      const foods = await extractFoodItems(text);
 
       // Store the extracted text in Firestore
-      if (user) {
-        await firestore.collection('receipts').add({
-          userId: user.uid,
-          text: extractedText,
-          timestamp: new Date(),
-        });
-      }
+      foods.forEach(async (food) => {
+        setDoc(doc(firestore, 'receipts', Math.random().toString()), {
+          username,
+          food: food,
+          expiration: new Date(Date.now() + foodLifespan[food] * 24 * 60 * 60 * 1000),
+          notified: false
+        })
+      })
+      setLoading(false);
     } catch (error) {
       console.error('Error scanning receipt:', error);
     }
   };
 
+  const notifyNetwork = async (id) => {
+    const receiptRef = doc(firestore, 'receipts', id)
+    await setDoc(receiptRef, {
+      ...receiptsList.find(receipt => receipt.id === id),
+      notified: true
+    })
+    alert('Network notified!')
+  }
+
+  const closeCard = async (id) => {
+    const receiptRef = doc(firestore, 'receipts', id)
+    await deleteDoc(receiptRef)
+  }
+
   return (
-    <div className="container">
+    <div className="container mt-5">
       <div className="row">
         <div className="col-md-6 offset-md-3 text-center">
-          <h2>Scan Your Receipt</h2>
+          <label htmlFor="imageFile" className="form-label">
+            Upload a receipt
+          </label>
           <input type="file" accept="image/*" onChange={handleImageChange} />
-          <button className="btn btn-primary" onClick={handleScanReceipt}>
-            Scan Receipt
-          </button>
+          <div>
+            <button className="btn btn-primary m-3" onClick={handleScanReceipt}>
+              Scan Receipt
+            </button>
+            <Link to="/recipes" className="btn btn-primary btn-lg m-3">
+              Recipes
+            </Link>
+          </div>
           <div>
             <h4>Extracted Text:</h4>
             <p>{extractedText}</p>
           </div>
-          {user && (
-            <div>
-              <h4>Your Receipts:</h4>
-              {loading ? (
-                <p>Loading...</p>
-              ) : (
-                <ul>
-                  {receipts?.docs.map((doc) => (
-                    <li key={doc.id}>{doc.data().text}</li>
+
+          <div>
+            <h4>Your food</h4>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div className="container">
+                <div className="row">
+                  {receiptsList.map((receipt, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card-container">
+                        <button
+                          className="btn btn-close"
+                          onClick={() => closeCard(receipt.id)} // Replace closeCard with your actual close function
+                        >
+                        </button>
+                        <div className="card mb-3">
+                          <div className="card-body">
+                            <h5 className="card-title">{receipt.food}</h5>
+                            <p className="card-text">
+                              Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
+                            </p>
+                            {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
+                            {!receipt.notified ?
+                              <button className='btn btn-primary' onClick={() => notifyNetwork(
+                                receipt.id
+                              )}>
+                                Notify network
+                              </button>
+                              : <p className="card-text text-success">Network notified!</p>
+                            }
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
                   ))}
-                </ul>
-              )}
+                </div>
+              </div>
+
+            )}
+          </div>
+
+          <div>
+            <h4>Food available in your network</h4>
+            <p>These people have food that will expire soon and would love to share it with you!</p>
+            <div className="container">
+              <div className="row">
+                {otherPeopleFood.map((receipt, index) => (
+                  <div key={index} className="col-md-6">
+                    <div className="card mb-3">
+                      <div className="card-body">
+                        <h5 className="card-title">{receipt.food}</h5>
+                        <p className="card-text">
+                          Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
+                        </p>
+                        {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
-          <Link to="/">Go back to Landing Page</Link>
+
+          </div>
+
         </div>
       </div>
     </div>
