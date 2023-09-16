@@ -1,4 +1,4 @@
-import react from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const recipes = [
@@ -55,17 +55,55 @@ const RecipesPage = () => {
 };
 
 const RecipeCard = ({ name, description, imageUrl }) => {
-  
+
+  const [showRecipe, setShowRecipe] = useState(false);
+  const [recipe, setRecipe] = useState(recipes[0]);
+
   return (
     <div className="card">
-      <img src={imageUrl} className="card-img-top" alt={name} />
-      <div className="card-body">
-        <h5 className="card-title">{name}</h5>
-        <p className="card-text">{description}</p>
-        <Link to={`/recipe/${encodeURIComponent(name)}`} className="btn btn-primary">
-          View Recipe
-        </Link>
-      </div>
+      {!showRecipe ?
+        <div>
+          <img src={imageUrl} className="card-img-top" alt={name} />
+          <div className="card-body">
+            <h5 className="card-title">{name}</h5>
+            <p className="card-text">{description}</p>
+            <button onClick={() => {
+              setShowRecipe(!showRecipe);
+              setRecipe(recipes.find((recipe) => recipe.name === name));
+            }} variant="primary"
+              className='btn btn-primary'
+            >
+              View Recipe
+            </button>
+          </div>
+        </div>
+        : <div className="card-body">
+          <div className="recipe-page">
+            <h2>{recipe.name}</h2>
+            <div className="recipe-details">
+              <div className="recipe-image">
+                <img className="card-img-top" src={recipe.imageUrl} alt={recipe.name} />
+              </div>
+              <div className="recipe-content">
+                <h3>Ingredients</h3>
+                <ul>
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <li key={index}>{ingredient}</li>
+                  ))}
+                </ul>
+                <h3>Recipe</h3>
+                <p>{recipe.recipe}</p>
+              </div>
+            </div>
+
+          </div>
+          <button onClick={() => setShowRecipe(!showRecipe)} variant="primary"
+            className='btn btn-primary'
+          >
+            Done
+          </button>
+        </div>
+      }
     </div>
   );
 };
