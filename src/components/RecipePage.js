@@ -1,6 +1,7 @@
 import react from 'react';
 import { Link } from 'react-router-dom';
 
+
 const recipes = [
   {
     name: 'Miso Ramen',
@@ -38,36 +39,37 @@ const recipes = [
 
 
 
-const RecipesPage = () => {
+const RecipePage = ({ match }) => {
+  const recipeName = decodeURIComponent(match.params.name);
+  const recipe = recipes.find((r) => r.name === recipeName);
+
+  if (!recipe) {
+    return <div>Recipe not found</div>;
+  }
+
   return (
-    <div className="row">
-      {recipes.map((recipe, index) => (
-        <div className="col-md-4" key={index}>
-          <RecipeCard
-            name={recipe.name}
-            description={recipe.description}
-            imageUrl={recipe.imageUrl}
-          />
+    <div className="recipe-page">
+      <h2>{recipe.name}</h2>
+      <div className="recipe-details">
+        <div className="recipe-image">
+          <img src={recipe.imageUrl} alt={recipe.name} />
         </div>
-      ))}
-    </div>
-  );
-};
-
-const RecipeCard = ({ name, description, imageUrl }) => {
-  
-  return (
-    <div className="card">
-      <img src={imageUrl} className="card-img-top" alt={name} />
-      <div className="card-body">
-        <h5 className="card-title">{name}</h5>
-        <p className="card-text">{description}</p>
-        <Link to={`/recipe/${encodeURIComponent(name)}`} className="btn btn-primary">
-          View Recipe
-        </Link>
+        <div className="recipe-content">
+          <h3>Ingredients</h3>
+          <ul>
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
+            ))}
+          </ul>
+          <h3>Recipe</h3>
+          <p>{recipe.recipe}</p>
+        </div>
       </div>
+      <Link to="/" className="btn btn-primary">
+        Back to Recipes
+      </Link>
     </div>
   );
 };
 
-export default RecipesPage;
+export default RecipePage;
