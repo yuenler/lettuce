@@ -133,89 +133,100 @@ const ScanReceiptPage = () => {
   }
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-6 offset-md-3 text-center">
-          <label htmlFor="imageFile" className="form-label">
-            Upload a receipt
-          </label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          <div>
-            <button className="btn btn-primary m-3" onClick={handleScanReceipt}>
-              Scan Receipt
-            </button>
-            <Link to="/recipes" className="btn btn-primary btn-lg m-3">
-              Recipes
-            </Link>
-          </div>
+    <div style={{ backgroundColor: '#e7f0e4' }}>
+      <div className="container pt-5" >
+        <div className="row">
+          <div className="col-md-6 offset-md-3 text-center">
+            <p>{`Username: ${username}`}</p>
+            <label htmlFor="imageFile" className="form-label">
+              Upload a receipt
+            </label>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <div>
+              <button
+                className="btn btn-primary m-3"
+                onClick={handleScanReceipt}
+                style={{ backgroundColor: '#526446' }}
+              >
+                Scan Receipt
+              </button>
+              <Link to="/recipes" className="btn btn-primary btn-lg m-3"
+                style={{ backgroundColor: '#526446' }}
+              >
+                Recipes
+              </Link>
+            </div>
 
-          <div>
-            <h4>Your food</h4>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              <div className="container">
-                <div className="row">
-                  {receiptsList.map((receipt, index) => (
-                    <div key={index} className="col-md-6">
-                      <div className="card-container">
-                        <button
-                          className="btn btn-close"
-                          onClick={() => closeCard(receipt.id)} // Replace closeCard with your actual close function
-                        >
-                        </button>
-                        <div className="card mb-3">
-                          <div className="card-body">
-                            <h5 className="card-title">{receipt.food}</h5>
-                            <p className="card-text">
-                              Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
-                            </p>
-                            {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
-                            {!receipt.notified ?
-                              <button className='btn btn-primary' onClick={() => notifyNetwork(
-                                receipt.id
-                              )}>
-                                Notify network
-                              </button>
-                              : <p className="card-text text-success">Network notified!</p>
-                            }
+            <div>
+              <h4>Your food</h4>
+              {loading ? (
+                <p>Loading...</p>
+              ) : (
+                <div className="container">
+                  <div className="row">
+                    {receiptsList.map((receipt, index) => (
+                      <div key={index} className="col-md-6">
+                        <div className="card-container">
+                          <button
+                            style={{ backgroundColor: '#526446' }}
+                            className="btn btn-close"
+                            onClick={() => closeCard(receipt.id)} // Replace closeCard with your actual close function
+                          >
+                          </button>
+                          <div className="card mb-3">
+                            <div className="card-body">
+                              <h5 className="card-title">{receipt.food}</h5>
+                              <p className="card-text">
+                                Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
+                              </p>
+                              {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
+                              {!receipt.notified ?
+                                <button style={{ backgroundColor: '#526446' }}
+                                  className='btn btn-primary' onClick={() => notifyNetwork(
+                                    receipt.id
+                                  )}>
+                                  Notify network
+                                </button>
+                                : <p className="card-text text-success">Network notified!</p>
+                              }
+                            </div>
                           </div>
                         </div>
-                      </div>
 
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              )}
+            </div>
+
+            <div>
+              <h4>Food available in your network</h4>
+              <p>These people have food that will expire soon and would love to share it with you!</p>
+              <div className="container">
+                <div className="row">
+                  {otherPeopleFood.map((receipt, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card mb-3">
+                        <div className="card-body">
+                          <p>{receipt.username}</p>
+
+                          <h5 className="card-title">{receipt.food}</h5>
+                          <p className="card-text">
+                            Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
+                          </p>
+                          {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-            )}
-          </div>
-
-          <div>
-            <h4>Food available in your network</h4>
-            <p>These people have food that will expire soon and would love to share it with you!</p>
-            <div className="container">
-              <div className="row">
-                {otherPeopleFood.map((receipt, index) => (
-                  <div key={index} className="col-md-6">
-                    <div className="card mb-3">
-                      <div className="card-body">
-                        <p>{receipt.username}</p>
-
-                        <h5 className="card-title">{receipt.food}</h5>
-                        <p className="card-text">
-                          Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
-                        </p>
-                        {receipt.expiresSoon && <p className="card-text text-danger">Expires soon!</p>}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
           </div>
-
         </div>
       </div>
     </div>

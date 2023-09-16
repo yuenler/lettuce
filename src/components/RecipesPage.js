@@ -40,17 +40,21 @@ const recipes = [
 
 const RecipesPage = () => {
   return (
-    <div className="row">
-      {recipes.map((recipe, index) => (
-        <div className="col-md-4" key={index}>
-          <RecipeCard
-            name={recipe.name}
-            description={recipe.description}
-            imageUrl={recipe.imageUrl}
-          />
-        </div>
-      ))}
-    </div>
+    <div className="row" style={{
+      backgroundColor: '#e7f0e4', height: '100vh',
+    }}>
+      {
+        recipes.map((recipe, index) => (
+          <div className="col-md-4" key={index}>
+            <RecipeCard
+              name={recipe.name}
+              description={recipe.description}
+              imageUrl={recipe.imageUrl}
+            />
+          </div>
+        ))
+      }
+    </div >
   );
 };
 
@@ -60,17 +64,19 @@ const RecipeCard = ({ name, description, imageUrl }) => {
   const [recipe, setRecipe] = useState(recipes[0]);
 
   return (
-    <div className="card">
+    <div className="card mt-5">
       {!showRecipe ?
         <div>
           <img src={imageUrl} className="card-img-top" alt={name} />
           <div className="card-body">
             <h5 className="card-title">{name}</h5>
             <p className="card-text">{description}</p>
-            <button onClick={() => {
-              setShowRecipe(!showRecipe);
-              setRecipe(recipes.find((recipe) => recipe.name === name));
-            }} variant="primary"
+            <button
+              style={{ backgroundColor: '#526446' }}
+              onClick={() => {
+                setShowRecipe(!showRecipe);
+                setRecipe(recipes.find((recipe) => recipe.name === name));
+              }} variant="primary"
               className='btn btn-primary'
             >
               View Recipe
@@ -97,7 +103,7 @@ const RecipeCard = ({ name, description, imageUrl }) => {
             </div>
 
           </div>
-          <button onClick={() => setShowRecipe(!showRecipe)} variant="primary"
+          <button onClick={() => setShowRecipe(!showRecipe)} variant="primary" style={{ backgroundColor: '#526446' }}
             className='btn btn-primary'
           >
             Done
