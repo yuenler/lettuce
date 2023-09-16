@@ -24,7 +24,7 @@ const LandingPage = () => {
               alt="Lettuce Icon"
               className="lettuce-icon"
             />
-            <h1>Lettuce</h1>
+            <h1>lettuce</h1>
             <div className="mb-3">
               <input
                 type="text"
