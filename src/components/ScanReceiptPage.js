@@ -21,18 +21,7 @@ const ScanReceiptPage = () => {
     , [])
 
   function extractFoodItems(text) {
-    // const foodItems = [];
-    // const lines = text.split(/\r?\n/); // Split the text into lines
-
-    // for (const line of lines) {
-    //   // Look for lines that start with a code (e.g., "F") followed by a description
-    //   const match = line.match(/^\s*([A-Z]+\s+[A-Z]+)\s+(.+)/);
-    //   if (match) {
-    //     const code = match[1].trim();
-    //     const description = match[2].trim();
-    //     foodItems.push(description);
-    //   }
-    // }
+    const foods = ['zucchini', 'potato']
 
     return text;
   }
@@ -82,11 +71,15 @@ const ScanReceiptPage = () => {
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 text-center">
-          <h2>Scan Your Receipt</h2>
           <input type="file" accept="image/*" onChange={handleImageChange} />
-          <button className="btn btn-primary" onClick={handleScanReceipt}>
-            Scan Receipt
-          </button>
+          <div>
+            <button className="btn btn-primary m-3" onClick={handleScanReceipt}>
+              Scan Receipt
+            </button>
+            <Link to="/recipes" className="btn btn-primary btn-lg m-3">
+              Recipes
+            </Link>
+          </div>
           <div>
             <h4>Extracted Text:</h4>
             <p>{extractedText}</p>
