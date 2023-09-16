@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDocs, collection } from 'firebase/firestore'
 import { auth, firestore } from '../firebase';
-import axios from 'axios';
 
 const ScanReceiptPage = () => {
   const [user] = useAuthState(auth);
@@ -21,6 +20,23 @@ const ScanReceiptPage = () => {
   }
     , [])
 
+  function extractFoodItems(text) {
+    // const foodItems = [];
+    // const lines = text.split(/\r?\n/); // Split the text into lines
+
+    // for (const line of lines) {
+    //   // Look for lines that start with a code (e.g., "F") followed by a description
+    //   const match = line.match(/^\s*([A-Z]+\s+[A-Z]+)\s+(.+)/);
+    //   if (match) {
+    //     const code = match[1].trim();
+    //     const description = match[2].trim();
+    //     foodItems.push(description);
+    //   }
+    // }
+
+    return text;
+  }
+
 
   const [receipts, loading, error] = [null, null, null];
   const handleImageChange = (e) => {
@@ -35,28 +51,19 @@ const ScanReceiptPage = () => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('file', imageFile);
+      // const formData = new FormData();
+      // formData.append('file', imageFile);
+      const ReadText = require('text-from-image')
 
-      // Send the image to the Google Cloud Vision API for text extraction
-      const response = await axios.post(
-        'https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY',
-        {
-          requests: [
-            {
-              image: {
-                content: formData,
-              },
-              features: [{ type: 'DOCUMENT_TEXT_DETECTION' }],
-            },
-          ],
-        }
-      );
+      const text = await ReadText(
+        imageFile
+      )
 
-      const extractedText =
-        response?.data?.responses[0]?.fullTextAnnotation?.text || '';
 
-      setExtractedText(extractedText);
+      // const extractedText =
+      //   response?.data?.responses[0]?.fullTextAnnotation?.text || '';
+
+      setExtractedText(extractFoodItems(text));
 
       // Store the extracted text in Firestore
       if (user) {
