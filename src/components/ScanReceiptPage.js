@@ -152,7 +152,7 @@ const ScanReceiptPage = () => {
             </div>
             <div>
               <button
-                className="btn btn-success m-3 "
+                className="btn btn-success  btn-lg m-3 "
                 onClick={handleScanReceipt}
               >
                 Scan Receipt
