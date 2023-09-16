@@ -29,37 +29,36 @@ const ScanReceiptPage = () => {
   const [loading, setLoading] = useState(false);
   const [receiptsList, setReceiptsList] = useState([])
   const [otherPeopleFood, setOtherPeopleFood] = useState([])
+  const getReceipts = async () => {
+    const receiptsRef = collection(firestore, 'receipts')
+    const receiptsSnapshot = await getDocs(receiptsRef)
+    let receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
 
+    // sort by expiration date
+    receiptsList.sort((a, b) => a.expiration.seconds - b.expiration.seconds)
+    // add a field to all of them called "expiresSoon" if expires in 7 days or less
+    receiptsList.forEach(receipt => {
+      receipt.expiresSoon = receipt.expiration.seconds * 1000 - Date.now() < 7 * 24 * 60 * 60 * 1000
+    })
+
+    //set id to be the doc id
+    receiptsList.forEach((receipt, index) => {
+      receipt.id = receiptsSnapshot.docs[index].id
+    })
+
+    // filter to those where username matches
+    receiptsList = receiptsList.filter(receipt => receipt.username === username)
+
+    const other = receiptsList.filter(receipt => receipt.username !== username && receipt.notified)
+    setOtherPeopleFood(other)
+
+    setReceiptsList(receiptsList)
+  }
 
   useEffect(() => {
-    const getReceipts = async () => {
-      const receiptsRef = collection(firestore, 'receipts')
-      const receiptsSnapshot = await getDocs(receiptsRef)
-      let receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
-
-      // sort by expiration date
-      receiptsList.sort((a, b) => a.expiration.seconds - b.expiration.seconds)
-      // add a field to all of them called "expiresSoon" if expires in 7 days or less
-      receiptsList.forEach(receipt => {
-        receipt.expiresSoon = receipt.expiration.seconds * 1000 - Date.now() < 7 * 24 * 60 * 60 * 1000
-      })
-
-      //set id to be the doc id
-      receiptsList.forEach((receipt, index) => {
-        receipt.id = receiptsSnapshot.docs[index].id
-      })
-
-      // filter to those where username matches
-      receiptsList = receiptsList.filter(receipt => receipt.username === username)
-
-      const other = receiptsList.filter(receipt => receipt.username !== username && receipt.notified)
-      setOtherPeopleFood(other)
-
-      setReceiptsList(receiptsList)
-    }
     getReceipts()
   }
-    , [loading])
+    , [])
 
   async function extractFoodItems(text) {
     text = text.toLowerCase();
@@ -108,7 +107,10 @@ const ScanReceiptPage = () => {
           notified: false
         })
       })
+      getReceipts()
+
       setLoading(false);
+
     } catch (error) {
       console.error('Error scanning receipt:', error);
     }
@@ -120,12 +122,14 @@ const ScanReceiptPage = () => {
       ...receiptsList.find(receipt => receipt.id === id),
       notified: true
     })
+    getReceipts()
     alert('Network notified!')
   }
 
   const closeCard = async (id) => {
     const receiptRef = doc(firestore, 'receipts', id)
     await deleteDoc(receiptRef)
+    getReceipts()
   }
 
   return (
