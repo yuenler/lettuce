@@ -32,18 +32,18 @@ const ScanReceiptPage = () => {
   const getReceipts = async () => {
     const receiptsRef = collection(firestore, 'receipts')
     const receiptsSnapshot = await getDocs(receiptsRef)
-    let receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
+    let receiptsList = receiptsSnapshot.docs.map(doc => {
+      return {
+        id: doc.id,
+        ...doc.data()
+      }
+    })
 
     // sort by expiration date
     receiptsList.sort((a, b) => a.expiration.seconds - b.expiration.seconds)
     // add a field to all of them called "expiresSoon" if expires in 7 days or less
     receiptsList.forEach(receipt => {
       receipt.expiresSoon = receipt.expiration.seconds * 1000 - Date.now() < 7 * 24 * 60 * 60 * 1000
-    })
-
-    //set id to be the doc id
-    receiptsList.forEach((receipt, index) => {
-      receipt.id = receiptsSnapshot.docs[index].id
     })
 
     // filter to those where username matches
@@ -127,6 +127,7 @@ const ScanReceiptPage = () => {
   }
 
   const closeCard = async (id) => {
+    console.log(id)
     const receiptRef = doc(firestore, 'receipts', id)
     await deleteDoc(receiptRef)
     getReceipts()
@@ -165,12 +166,12 @@ const ScanReceiptPage = () => {
                 <div className="container">
                   <div className="row">
                     {receiptsList.map((receipt, index) => (
-                      <div key={index} className="col-md-6">
+                      <div key={receipt.id} className="col-md-6">
                         <div className="card-container">
                           <button
                             style={{ backgroundColor: '#526446' }}
                             className="btn btn-close"
-                            onClick={() => closeCard(receipt.id)} // Replace closeCard with your actual close function
+                            onClick={() => closeCard(receipt.id)}
                           >
                           </button>
                           <div className="card mb-3">
@@ -207,7 +208,7 @@ const ScanReceiptPage = () => {
               <div className="container">
                 <div className="row">
                   {otherPeopleFood.map((receipt, index) => (
-                    <div key={index} className="col-md-6">
+                    <div key={receipt.id} className="col-md-6">
                       <div className="card mb-3">
                         <div className="card-body">
                           <p>{receipt.username}</p>
