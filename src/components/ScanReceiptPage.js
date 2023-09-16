@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { getDocs, collection } from 'firebase/firestore'
-import { auth, firestore } from '../firebase';
+import { Link, useLocation } from 'react-router-dom';
+import { getDocs, doc, setDoc, collection } from 'firebase/firestore'
+import { firestore } from '../firebase';
+
+
+const foodLifespan = {
+  'zucchini': 5,
+  'potato': 10,
+}
+
 
 const ScanReceiptPage = () => {
-  const [user] = useAuthState(auth);
   const [imageFile, setImageFile] = useState(null);
   const [extractedText, setExtractedText] = useState('');
+  const location = useLocation();
+  const { username } = location.state;
+  const [loading, setLoading] = useState(false);
+  const [receiptsList, setReceiptsList] = useState([])
+
 
   useEffect(() => {
     const getReceipts = async () => {
       const receiptsRef = collection(firestore, 'receipts')
       const receiptsSnapshot = await getDocs(receiptsRef)
       const receiptsList = receiptsSnapshot.docs.map(doc => doc.data())
-      console.log(receiptsList)
+      setReceiptsList(receiptsList)
     }
     getReceipts()
   }
@@ -23,17 +33,18 @@ const ScanReceiptPage = () => {
   function extractFoodItems(text) {
     const foods = ['zucchini', 'potato']
 
-    return text;
+    return foods;
   }
 
 
-  const [receipts, loading, error] = [null, null, null];
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImageFile(file);
   };
 
   const handleScanReceipt = async () => {
+    setLoading(true);
+
     if (!imageFile) {
       alert('Please select an image first.');
       return;
@@ -48,20 +59,17 @@ const ScanReceiptPage = () => {
         imageFile
       )
 
-
-      // const extractedText =
-      //   response?.data?.responses[0]?.fullTextAnnotation?.text || '';
-
-      setExtractedText(extractFoodItems(text));
+      const foods = extractFoodItems(text)
 
       // Store the extracted text in Firestore
-      if (user) {
-        await firestore.collection('receipts').add({
-          userId: user.uid,
-          text: extractedText,
-          timestamp: new Date(),
-        });
-      }
+      foods.forEach(async (food) => {
+        setDoc(doc(firestore, 'receipts', Math.random().toString()), {
+          username,
+          food: food,
+          expiration: new Date(Date.now() + foodLifespan[food] * 24 * 60 * 60 * 1000)
+        })
+      })
+      setLoading(false);
     } catch (error) {
       console.error('Error scanning receipt:', error);
     }
@@ -84,21 +92,32 @@ const ScanReceiptPage = () => {
             <h4>Extracted Text:</h4>
             <p>{extractedText}</p>
           </div>
-          {user && (
-            <div>
-              <h4>Your Receipts:</h4>
-              {loading ? (
-                <p>Loading...</p>
-              ) : (
-                <ul>
-                  {receipts?.docs.map((doc) => (
-                    <li key={doc.id}>{doc.data().text}</li>
+
+          <div>
+            <h4>Your food:</h4>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div className="container">
+                <div className="row">
+                  {receiptsList.map((receipt, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card mb-3">
+                        <div className="card-body">
+                          <h5 className="card-title">{receipt.food}</h5>
+                          <p className="card-text">
+                            Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </ul>
-              )}
-            </div>
-          )}
-          <Link to="/">Go back to Landing Page</Link>
+                </div>
+              </div>
+
+            )}
+          </div>
+
         </div>
       </div>
     </div>
