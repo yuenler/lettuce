@@ -15,12 +15,12 @@
 
 @keyframes moveLeftRight {
   0% {
-    transform: translateX(0);
+    transform: translateX(10);
   }
   50% {
-    transform: translateX(-10px);
+    transform: translateX(-20px);
   }
   100% {
-    transform: translateX(0);
+    transform: translateX(10);
   }
 }

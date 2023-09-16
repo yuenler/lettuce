@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css'; // Create a CSS file for custom styles
+import lettuce from '../assets/logo.png'
 
 const LandingPage = () => {
   return (
@@ -9,7 +10,7 @@ const LandingPage = () => {
         <div className="row">
           <div className="col-md-6 offset-md-3 text-center">
             <img
-              src="lettuce-icon.png" // Replace with your lettuce icon image
+              src={lettuce} // Replace with your lettuce icon image
               alt="Lettuce Icon"
               className="lettuce-icon"
             />
