@@ -47,12 +47,12 @@ const ScanReceiptPage = () => {
     })
 
     // filter to those where username matches
-    receiptsList = receiptsList.filter(receipt => receipt.username === username)
+    const myList = receiptsList.filter(receipt => receipt.username === username)
 
     const other = receiptsList.filter(receipt => receipt.username !== username && receipt.notified)
     setOtherPeopleFood(other)
 
-    setReceiptsList(receiptsList)
+    setReceiptsList(myList)
   }
 
   useEffect(() => {
@@ -200,6 +200,8 @@ const ScanReceiptPage = () => {
                   <div key={index} className="col-md-6">
                     <div className="card mb-3">
                       <div className="card-body">
+                        <p>{receipt.username}</p>
+
                         <h5 className="card-title">{receipt.food}</h5>
                         <p className="card-text">
                           Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
