@@ -25,6 +25,7 @@ const LandingPage = () => {
               className="lettuce-icon"
             />
             <h1>lettuce</h1>
+            <h3>Let us save food, one lettuce at a time.</h3>
             <div className="mb-3">
               <input
                 type="text"

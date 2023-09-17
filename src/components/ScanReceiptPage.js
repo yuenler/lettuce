@@ -7,19 +7,64 @@ import LoadingSpinner from './Loading';
 
 
 const foodLifespan = {
-  'zucchini': 5,
-  'potato': 10,
-  'milk': 7,
-  'grape': 3,
-  'salad': 7,
+  'zucchini': 7,              // Zucchini can last up to 7 days in the fridge.
+  'potato': 30,               // Potatoes have a longer shelf life and can last up to 30 days.
+  'milk': 7,                  // Milk typically lasts about 7 days in the fridge.
+  'grape': 5,                 // Grapes can last around 5 days in the fridge.
+  'salad': 5,                 // Salad greens like lettuce can last up to 5 days.
+  'pepper': 7,                // Peppers can last about 7 days in the fridge.
+  'onion': 30,                // Onions have a longer shelf life and can last up to 30 days.
+  'banana': 5,                // Bananas typically last about 5 days in the fridge.
+  'garlic': 90,               // Garlic can last up to 90 days or more in the fridge.
+  'broccoli': 7,              // Broccoli can last about 7 days in the fridge.
+  'lettuce': 5,               // Lettuce typically lasts around 5 days in the fridge.
+  'cucumber': 7,              // Cucumbers can last about 7 days in the fridge.
+  'tilapia': 3,               // Tilapia is best consumed within 3 days.
+  'apple': 30,                // Apples have a longer shelf life and can last up to 30 days.
+  'turkey': 3,                // Turkey should be consumed within 3 days.
+  'chicken': 3,               // Chicken should be consumed within 3 days.
+  'beef': 3,                  // Beef should be consumed within 3 days.
+  'ham': 3,                   // Ham should be consumed within 3 days.
+  'peach': 5,                 // Peaches typically last about 5 days in the fridge.
+  'orange': 14,               // Oranges have a longer shelf life and can last up to 14 days.
+  'pea': 3,                   // Peas should be consumed within 3 days.
+  'carrot': 14,               // Carrots have a longer shelf life and can last up to 14 days.
+  'tomato': 7,                // Tomatoes can last about 7 days in the fridge.
+  'spinach': 5,               // Spinach typically lasts around 5 days in the fridge.
+  'egg': 30,                  // Eggs have a longer shelf life and can last up to 30 days.
+  'cheese': 30,               // Cheese can last up to 30 days or more in the fridge.
+  'brussels sprouts': 7,      // Brussels sprouts can last about 7 days in the fridge.
 }
+
 
 const receiptTextToFoodMap = {
   'ZUCCHINI': 'zucchini',
-  'POTATO': 'potato',
+  'POTATOES': 'potatoes',
   'MILK': 'milk',
   'GRAPE': 'grape',
   'SALAD': 'salad',
+  'PEPPERS': 'peppers',
+  'ONIONS': 'onions',
+  'BANANAS': 'bananas',
+  'GARLIC': 'garlic',
+  'BROCCOLI': 'broccoli',
+  'LETTUCE': 'lettuce',
+  'CUCUMBERS': 'cucumbers',
+  'TILAPIA': 'tilapia',
+  'APPLES': 'apples',
+  'TURKEY': 'turkey',
+  'CHICKEN': 'chicken',
+  'BEEF': 'beef',
+  'HAM': 'ham',
+  'PEACHES': 'peaches',
+  'ORANGES': 'oranges',
+  'PEAS': 'peas',
+  'CARROTS': 'carrots',
+  'TOMATOES': 'tomatoes',
+  'SPINACH': 'spinach',
+  'EGGS': 'eggs',
+  'CHEESE': 'cheese',
+  'BRUSSELS SPROUTS': 'brussels sprouts',
 }
 
 
@@ -178,7 +223,7 @@ const ScanReceiptPage = () => {
                   {receiptsList.length === 0 && <p>You have no food in your fridge!</p>}
                   <div className="row">
                     {receiptsList.map((receipt, index) => (
-                      <div key={receipt.id} className="col-md-6">
+                      <div key={receipt.id} className="col-md-4">
                         <div className="card-container">
 
                           <div className="card mb-3">
@@ -224,7 +269,7 @@ const ScanReceiptPage = () => {
 
                 <div className="row">
                   {otherPeopleFood.map((receipt, index) => (
-                    <div key={receipt.id} className="col-md-6">
+                    <div key={receipt.id} className="col-md-4">
                       <div className="card mb-3">
                         <div className="card-body">
                           <p>{receipt.username}</p>
