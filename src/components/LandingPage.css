@@ -1,4 +1,5 @@
 /* LandingPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 .landing-page {
   min-height: 100vh;
@@ -23,4 +24,16 @@
   100% {
     transform: translateX(10);
   }
+}
+
+p {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
 }

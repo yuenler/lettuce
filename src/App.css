@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
 .App {
   text-align: center;
 }
@@ -33,21 +36,15 @@
   animation: spin 2s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+p {
+  font-family: 'Montserrat', sans-serif;
 }
-yu[; ]
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+  font-family: 'Montserrat', sans-serif;
 }
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
+}
+

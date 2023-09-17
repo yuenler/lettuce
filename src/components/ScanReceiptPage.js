@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { firestore } from '../firebase';
-import walmart from '../assets/walmart';
 import { doc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore'
+import './ScanReceiptPage.css';
+import LoadingSpinner from './Loading';
 
 
 const foodLifespan = {
@@ -158,6 +159,11 @@ const ScanReceiptPage = () => {
                 Scan Receipt
               </button>
               <Link to="/recipes" className="btn btn-success btn-lg m-3"
+                state={{
+                  ownFood: receiptsList,
+                  otherPeopleFood: otherPeopleFood
+                }}
+
               >
                 Recipes
               </Link>
@@ -166,7 +172,7 @@ const ScanReceiptPage = () => {
             <div>
               <h4>Your food</h4>
               {loading ? (
-                <p>Loading...</p>
+                <LoadingSpinner />
               ) : (
                 <div >
                   <div className="row">
@@ -181,7 +187,7 @@ const ScanReceiptPage = () => {
                             >
                             </button>
                             <div className="card-body">
-                              <h5 className="card-title">{receipt.food}</h5>
+                              <h5 className="card-title">{receipt.food[0].toUpperCase() + receipt.food.slice(1)}</h5>
                               <p className="card-text">
                                 Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
                               </p>
@@ -218,7 +224,9 @@ const ScanReceiptPage = () => {
                         <div className="card-body">
                           <p>{receipt.username}</p>
 
-                          <h5 className="card-title">{receipt.food}</h5>
+                          <h5 className="card-title">{receipt.food[0].toUpperCase() + receipt.food.slice(1)
+
+                          }</h5>
                           <p className="card-text">
                             Expires: {new Date(receipt.expiration.seconds * 1000).toLocaleDateString()}
                           </p>

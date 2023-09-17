@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import './RecipesPage.css'; // Create a CSS file for custom styles
+import { Modal, Button } from 'react-bootstrap';
+
 
 const recipes = [
   {
@@ -7,24 +10,25 @@ const recipes = [
     description: 'A classic Japanese noodle soup with savory miso broth.',
     imageUrl: 'https://dishingouthealth.com/wp-content/uploads/2022/01/SpicyMisoRamen_Square.jpg',
     ingredients: [
-      "4 cups chicken or vegetable broth",
-      "2-4 tablespoons miso paste (adjust to taste, white or red miso works)",
-      "1-2 tablespoons soy sauce (adjust to taste)",
-      "1 tablespoon sesame oil",
-      "1-inch piece of fresh ginger, minced",
-      "2-3 cloves garlic, minced",
-      "1-2 teaspoons sugar (optional, to balance the flavors)",
-      "Salt and pepper to taste",
-      "8 oz (about 2 portions) ramen noodles (fresh or dried)",
-      "Sliced green onions (scallions)",
-      "Sliced mushrooms (shiitake, cremini, or your choice)",
-      "Corn kernels (canned or frozen, cooked)",
-      "Sliced bamboo shoots (optional)",
-      "Bean sprouts (optional)",
-      "Soft-boiled eggs, halved or marinated egg (optional)",
-      "Nori (seaweed) sheets, cut into thin strips (optional)",
-      "Sesame seeds (optional)"
-    ],
+      { "text": "4 cups chicken or vegetable broth", "ingredient": "chicken broth" },
+      { "text": "2-4 tablespoons miso paste (adjust to taste, white or red miso works)", "ingredient": "miso paste" },
+      { "text": "1-2 tablespoons soy sauce (adjust to taste)", "ingredient": "soy sauce" },
+      { "text": "1 tablespoon sesame oil", "ingredient": "sesame oil" },
+      { "text": "1-inch piece of fresh ginger, minced", "ingredient": "fresh ginger" },
+      { "text": "2-3 cloves garlic, minced", "ingredient": "cloves garlic" },
+      { "text": "1-2 teaspoons sugar (optional, to balance the flavors)", "ingredient": "sugar" },
+      { "text": "Salt and pepper to taste", "ingredient": "Salt and pepper" },
+      { "text": "8 oz (about 2 portions) ramen noodles (fresh or dried)", "ingredient": "ramen noodles" },
+      { "text": "Sliced green onions (scallions)", "ingredient": "green onions" },
+      { "text": "Sliced mushrooms (shiitake, cremini, or your choice)", "ingredient": "mushrooms" },
+      { "text": "Corn kernels (canned or frozen, cooked)", "ingredient": "corn kernels" },
+      { "text": "Sliced bamboo shoots (optional)", "ingredient": "bamboo shoots" },
+      { "text": "Bean sprouts (optional)", "ingredient": "bean sprouts" },
+      { "text": "Soft-boiled eggs, halved or marinated egg (optional)", "ingredient": "soft-boiled eggs" },
+      { "text": "Nori (seaweed) sheets, cut into thin strips (optional)", "ingredient": "Nori sheets" },
+      { "text": "Sesame seeds (optional)", "ingredient": "sesame seeds" }
+    ]
+    ,
     recipe: `Instructions:
 
     1. Prepare the Broth:
@@ -60,32 +64,32 @@ const recipes = [
     description: 'A flavorful Indian dish made with tender chicken in a rich masala sauce.',
     imageUrl: 'https://www.thecookingcollective.com.au/wp-content/uploads/2021/08/finished-tikka-masala-with-vegetables-and-roti-bread.jpg',
     ingredients: [
-      "3 boneless, skinless chicken breasts",
-      "½ cup plain yogurt",
-      "2 tablespoons lemon juice",
-      "6 cloves garlic, minced",
-      "1 tablespoon minced ginger",
-      "2 teaspoons salt",
-      "2 teaspoons ground cumin",
-      "2 teaspoons garam masala",
-      "2 teaspoons paprika",
-      "3 tablespoons oil",
-      "1 large onion, finely chopped",
-      "2 tablespoons minced ginger",
-      "8 cloves garlic, minced",
-      "2 teaspoons ground cumin",
-      "2 teaspoons ground turmeric",
-      "2 teaspoons ground coriander",
-      "2 teaspoons paprika",
-      "2 teaspoons chili powder",
-      "2 teaspoons garam masala",
-      "1 tablespoon tomato puree",
-      "3 ½ cups tomato sauce",
-      "1 ¼ cups water",
-      "1 cup heavy cream",
-      "¼ cup fresh cilantro, for garnish",
-      "Cooked rice, for serving",
-      "Naan bread, for serving"
+      { "text": "3 boneless, skinless chicken breasts", "ingredient": "chicken breasts" },
+      { "text": "½ cup plain yogurt", "ingredient": "plain yogurt" },
+      { "text": "2 tablespoons lemon juice", "ingredient": "lemon juice" },
+      { "text": "6 cloves garlic, minced", "ingredient": "garlic" },
+      { "text": "1 tablespoon minced ginger", "ingredient": "ginger" },
+      { "text": "2 teaspoons salt", "ingredient": "salt" },
+      { "text": "2 teaspoons ground cumin", "ingredient": "ground cumin" },
+      { "text": "2 teaspoons garam masala", "ingredient": "garam masala" },
+      { "text": "2 teaspoons paprika", "ingredient": "paprika" },
+      { "text": "3 tablespoons oil", "ingredient": "oil" },
+      { "text": "1 large onion, finely chopped", "ingredient": "onion" },
+      { "text": "2 tablespoons minced ginger", "ingredient": "ginger" },
+      { "text": "8 cloves garlic, minced", "ingredient": "garlic" },
+      { "text": "2 teaspoons ground cumin", "ingredient": "ground cumin" },
+      { "text": "2 teaspoons ground turmeric", "ingredient": "ground turmeric" },
+      { "text": "2 teaspoons ground coriander", "ingredient": "ground coriander" },
+      { "text": "2 teaspoons paprika", "ingredient": "paprika" },
+      { "text": "2 teaspoons chili powder", "ingredient": "chili powder" },
+      { "text": "2 teaspoons garam masala", "ingredient": "garam masala" },
+      { "text": "1 tablespoon tomato puree", "ingredient": "tomato puree" },
+      { "text": "3 ½ cups tomato sauce", "ingredient": "tomato sauce" },
+      { "text": "1 ¼ cups water", "ingredient": "water" },
+      { "text": "1 cup heavy cream", "ingredient": "heavy cream" },
+      { "text": "¼ cup fresh cilantro, for garnish", "ingredient": "fresh cilantro" },
+      { "text": "Cooked rice, for serving", "ingredient": "Cooked rice" },
+      { "text": "Naan bread, for serving", "ingredient": "Naan bread" }
     ],
     recipe: `Marinating the Chicken:
 
@@ -129,24 +133,24 @@ const recipes = [
     description: 'Delicious pizza topped with fresh vegetables and melted cheese.',
     imageUrl: 'https://cdn.loveandlemons.com/wp-content/uploads/2023/02/vegetarian-pizza.jpg',
     ingredients: [
-      "Pizza dough (store-bought or homemade)",
-      "Flour for dusting (if rolling out dough)",
-      "1 cup tomato sauce or pizza sauce",
-      "1 teaspoon olive oil",
-      "1 clove garlic, minced (optional)",
-      "1/2 teaspoon dried oregano",
-      "Salt and pepper to taste",
-      "1 1/2 cups shredded mozzarella cheese (or a mix of your favorite cheeses)",
-      "Sliced bell peppers",
-      "Sliced red onion",
-      "Sliced black olives",
-      "Sliced mushrooms",
-      "Sliced tomatoes",
-      "Fresh basil leaves",
-      "Spinach leaves",
-      "Artichoke hearts (canned or marinated)",
-      "Crumbled feta cheese",
-      "Red pepper flakes (for a bit of heat, optional)"
+      { "text": "Pizza dough (store-bought or homemade)", "ingredient": "Pizza dough" },
+      { "text": "Flour for dusting (if rolling out dough)", "ingredient": "Flour" },
+      { "text": "1 cup tomato sauce or pizza sauce", "ingredient": "tomato sauce or pizza sauce" },
+      { "text": "1 teaspoon olive oil", "ingredient": "olive oil" },
+      { "text": "1 clove garlic, minced (optional)", "ingredient": "garlic" },
+      { "text": "1/2 teaspoon dried oregano", "ingredient": "dried oregano" },
+      { "text": "Salt and pepper to taste", "ingredient": "Salt and pepper" },
+      { "text": "1 1/2 cups shredded mozzarella cheese (or a mix of your favorite cheeses)", "ingredient": "shredded mozzarella cheese" },
+      { "text": "Sliced bell peppers", "ingredient": "bell peppers" },
+      { "text": "Sliced red onion", "ingredient": "red onion" },
+      { "text": "Sliced black olives", "ingredient": "black olives" },
+      { "text": "Sliced mushrooms", "ingredient": "mushrooms" },
+      { "text": "Sliced tomatoes", "ingredient": "tomatoes" },
+      { "text": "Fresh basil leaves", "ingredient": "fresh basil leaves" },
+      { "text": "Spinach leaves", "ingredient": "Spinach leaves" },
+      { "text": "Artichoke hearts (canned or marinated)", "ingredient": "Artichoke hearts" },
+      { "text": "Crumbled feta cheese", "ingredient": "Crumbled feta cheese" },
+      { "text": "Red pepper flakes (for a bit of heat, optional)", "ingredient": "Red pepper flakes" }
     ],
     recipe: `1. Preheat Your Oven:
     Preheat your oven to the highest temperature it can go (usually around 475-500°F or 245-260°C). If you have a pizza stone, place it in the oven while it preheats.
@@ -180,12 +184,17 @@ const recipes = [
 
 
 const RecipesPage = () => {
+  const location = useLocation();
+  const { ownFood, otherPeopleFood } = location.state;
+
   return (
     <div className="row" >
       {
         recipes.map((recipe, index) => (
           <div className="col-md-4" key={index}>
             <RecipeCard
+              ownFood={ownFood}
+              otherPeopleFood={otherPeopleFood}
               name={recipe.name}
               description={recipe.description}
               imageUrl={recipe.imageUrl}
@@ -197,13 +206,58 @@ const RecipesPage = () => {
   );
 };
 
-const RecipeCard = ({ name, description, imageUrl }) => {
+const RecipeCard = ({ name, description, imageUrl, ownFood, otherPeopleFood }) => {
+
+  const [showModal, setShowModal] = useState(false); // Add this state
+  const [modalMessage, setModalMessage] = useState(''); // Add this state
+  const [ingredient, setIngredient] = useState(''); // Add this state
 
   const [showRecipe, setShowRecipe] = useState(false);
   const [recipe, setRecipe] = useState(recipes[0]);
 
+  const openFood = (ingredient) => {
+    if (ownFood.find((food) => food.food === ingredient)) {
+      setModalMessage(`You don't need to buy this! You have this ingredient in your pantry.`);
+      setIngredient(ingredient);
+    } else if (otherPeopleFood.find((food) => food.food === ingredient)) {
+      const person = otherPeopleFood.find((food) => food.food === ingredient).username;
+      setModalMessage(`You don't need to buy this! You can ask ${person} for this ingredient.`);
+      setIngredient(ingredient);
+    } else {
+      setModalMessage('We couldn\'t find the ingredient in your pantry or your network\'s pantry.');
+      setIngredient(ingredient);
+    }
+    setShowModal(true);
+  }
+
   return (
     <div className="card mt-5">
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{
+            `Ingredient: ${ingredient}`
+          }</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {modalMessage}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <a
+            href={`https://www.google.com/search?q=${encodeURIComponent('Buy ' + ingredient)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="primary">
+              Search on Google
+            </Button>
+          </a>
+        </Modal.Footer>
+      </Modal>
+
+
       {!showRecipe ?
         <div>
           <img src={imageUrl} className="card-img-top" alt={name} />
@@ -228,11 +282,15 @@ const RecipeCard = ({ name, description, imageUrl }) => {
               <div className="recipe-image">
                 <img className="card-img-top" src={recipe.imageUrl} alt={recipe.name} />
               </div>
-              <div className="recipe-content">
+              <div className="recipe-content mt-3">
                 <h3>Ingredients</h3>
                 <ul>
                   {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient}</li>
+                    <li
+                      className="text-decoration-underline"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => { openFood(ingredient.ingredient) }}
+                      key={index}>{ingredient.text}</li>
                   ))}
                 </ul>
                 <h3>Recipe</h3>
