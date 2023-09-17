@@ -175,6 +175,7 @@ const ScanReceiptPage = () => {
                 <LoadingSpinner />
               ) : (
                 <div >
+                  {receiptsList.length === 0 && <p>You have no food in your fridge!</p>}
                   <div className="row">
                     {receiptsList.map((receipt, index) => (
                       <div key={receipt.id} className="col-md-6">
@@ -217,6 +218,10 @@ const ScanReceiptPage = () => {
               <h4>Food available in your network</h4>
               <p>These people have food that will expire soon and would love to share it with you!</p>
               <div className="">
+                {otherPeopleFood.length === 0 && <p>
+                  No food available in your network!
+                </p>}
+
                 <div className="row">
                   {otherPeopleFood.map((receipt, index) => (
                     <div key={receipt.id} className="col-md-6">
