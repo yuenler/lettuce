@@ -34,6 +34,8 @@ const foodLifespan = {
   'egg': 30,                  // Eggs have a longer shelf life and can last up to 30 days.
   'cheese': 30,               // Cheese can last up to 30 days or more in the fridge.
   'brussels sprouts': 7,      // Brussels sprouts can last about 7 days in the fridge.
+  'peanut butter': 90,        // Peanut butter can last up to 90 days or more in the fridge.
+  'parmesan': 4,             // Parmesan can last up to 4 days or more in the fridge.
 }
 
 
@@ -65,6 +67,9 @@ const receiptTextToFoodMap = {
   'EGGS': 'eggs',
   'CHEESE': 'cheese',
   'BRUSSELS SPROUTS': 'brussels sprouts',
+  'PNT BUTTR': 'peanut butter',
+  'CHKN': 'chicken',
+  'PARM': 'parmesan',
 }
 
 

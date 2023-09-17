@@ -18,7 +18,7 @@ const LandingPage = () => {
     <div className="landing-page">
       <div className="container">
         <div className="row">
-          <div className="col-md-6 offset-md-3 text-center">
+          <div className="col-md-6 offset-md-3 text-center p-5">
             <img
               src={lettuce} // Replace with your lettuce icon image
               alt="Lettuce Icon"

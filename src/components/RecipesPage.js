@@ -191,7 +191,8 @@ const RecipesPage = () => {
     <div className="row" >
       {
         recipes.map((recipe, index) => (
-          <div className="col-md-4" key={index}>
+          <div
+            className="col-md-4 p-5" key={index}>
             <RecipeCard
               ownFood={ownFood}
               otherPeopleFood={otherPeopleFood}
